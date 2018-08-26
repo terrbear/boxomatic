@@ -1,7 +1,7 @@
 Overview
 --------
 
-Overview and purpose of this is described [here](http://terrbear.org)
+Overview and purpose of this is described [here](http://terrbear.org/lambda/iot/s3/aws/ops/asg/2017/12/12/aws-iot-boxomatic.html)
 
 Ansible Replacements Needed
 ---------------------------
