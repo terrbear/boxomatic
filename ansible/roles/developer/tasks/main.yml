@@ -1,0 +1,5 @@
+- name: install dev stuff
+  action: apt pkg={{item}} state=installed
+  with_items:
+    - silversearcher-ag
+    - docker.io

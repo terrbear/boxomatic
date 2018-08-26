@@ -1,0 +1,48 @@
+- name: boto
+  pip: name=boto
+- name: who am i
+  action: ec2_metadata_facts
+
+- name: ebs vol
+  ec2_vol:
+    instance: "{{ ansible_ec2_instance_id }}"
+    id: INSERT-VOLUME-ID
+    device_name: /dev/sdf
+    region: us-east-1
+
+- name: name me
+  ec2_tag:
+    resource: "{{ ansible_ec2_instance_id }}"
+    region: us-east-1
+    state: present
+    tags:
+      Name: box
+
+- name: set up ebs vol fs
+  filesystem: fstype=ext4 dev=/dev/xvdf
+
+- name: mount vol
+  mount: name=/mnt src=/dev/xvdf fstype=ext4 state=mounted
+
+- name: add dns entry
+  route53:
+    command: "create"
+    zone: "YOUR-ZONE"
+    record: "YOUR-DNS-NAME"
+    overwrite: yes
+    type: "A"
+    ttl: "3600"
+    value: "{{ ansible_ec2_public_ipv4 }}"
+
+- name: kill home
+  file:
+    force: yes
+    state: absent
+    path: /home
+
+- name: symlink home
+  file:
+    force: yes
+    state: link
+    src: /mnt/home
+    path: /home

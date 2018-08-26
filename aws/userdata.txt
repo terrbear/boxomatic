@@ -1,0 +1,22 @@
+#!/bin/bash -v
+
+apt-get update
+apt-get install -y python-pip python-dev libffi-dev libssl-dev
+
+pip install s3cmd
+pip install markupsafe
+
+mkdir /root/ansible
+
+s3cmd get --recursive s3://YOUR-S3-BUCKET /root/ansible
+pip install ansible
+pip install setuptools --upgrade
+
+sleep 30
+
+cd /root/ansible && rm ansible.cfg && ansible-galaxy install -r deps.txt > /bootstrap.out
+
+sleep 10
+
+cd /root/ansible && ansible-playbook -i production -c local box.yml >> /bootstrap.out
+
